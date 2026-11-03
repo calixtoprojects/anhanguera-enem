@@ -527,46 +527,47 @@
       localStorage.setItem('leads_enem', JSON.stringify(leads));
     } catch(e) {}
 
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 8000);
+    /* ── Web3Forms ── */
+    const WEB3FORMS_KEY = '49b13634-fc3e-4a66-a33a-89cc90de4077';
+    const payload = {
+      access_key: WEB3FORMS_KEY,
+      subject: 'Novo lead ENEM – ' + data.nome,
+      from_name: 'Landing ENEM Anhanguera',
+      Nome: data.nome,
+      'Data de Nascimento': data.nasc,
+      CPF: data.cpf,
+      WhatsApp: data.whats,
+      'E-mail': data.email,
+      'Cidade de Interesse': data.cidade
+    };
 
-    fetch('https://formsubmit.co/ajax/unoparsg@gmail.com', {
+    console.log('[ENEM] Enviando para Web3Forms...', payload);
+
+    fetch('https://api.web3forms.com/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({
-        'Nome': data.nome,
-        'Data de Nascimento': data.nasc,
-        'CPF': data.cpf,
-        'WhatsApp': data.whats,
-        'E-mail': data.email,
-        'Cidade de Interesse': data.cidade,
-        '_subject': 'Novo lead ENEM – ' + data.nome,
-        '_template': 'table',
-        '_captcha': 'false'
-      }),
-      signal: controller.signal
+      body: JSON.stringify(payload)
     })
-    .then(r => r.json())
+    .then(r => {
+      console.log('[ENEM] Status HTTP:', r.status);
+      return r.json();
+    })
     .then(res => {
-      clearTimeout(timer);
-      f.style.display = 'none';
-      document.getElementById('ok').classList.add('show');
+      console.log('[ENEM] Resposta:', JSON.stringify(res));
+      if (res.success) {
+        f.style.display = 'none';
+        document.getElementById('ok').classList.add('show');
+      } else {
+        btn.disabled = false;
+        btn.innerHTML = originalBtn;
+        alert('Erro: ' + (res.message || 'Falha ao enviar'));
+      }
     })
     .catch(err => {
-      clearTimeout(timer);
-      /* FormSubmit falhou — envia por mailto como fallback */
-      const assunto = encodeURIComponent('Novo lead ENEM – ' + data.nome);
-      const corpo = encodeURIComponent(
-        'Nome: ' + data.nome + '\n' +
-        'Data de Nascimento: ' + data.nasc + '\n' +
-        'CPF: ' + data.cpf + '\n' +
-        'WhatsApp: ' + data.whats + '\n' +
-        'E-mail: ' + data.email + '\n' +
-        'Cidade de Interesse: ' + data.cidade
-      );
-      window.open('mailto:unoparsg@gmail.com?subject=' + assunto + '&body=' + corpo, '_blank');
-      f.style.display = 'none';
-      document.getElementById('ok').classList.add('show');
+      console.error('[ENEM] Erro:', err);
+      btn.disabled = false;
+      btn.innerHTML = originalBtn;
+      alert('Erro de conexão: ' + err.message);
     });
   });
 </script>
