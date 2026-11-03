@@ -30,25 +30,34 @@
     }
 
     /* ══════════════════════════════════════════
-       DESKTOP LAYOUT
+       FULL-PAGE BACKGROUND
        ══════════════════════════════════════════ */
     .page {
-      display: flex;
-      min-height: 100vh;
       position: relative;
+      height: 100vh;
+      display: flex;
+      overflow: hidden;
     }
 
-    /* ── Orange Left ── */
+    .page::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url('img/background.png') center/cover no-repeat;
+      transform: scaleX(-1);
+      z-index: 0;
+    }
+
+    /* ── Left Content ── */
     .left {
+      position: relative;
+      z-index: 2;
       width: 50%;
-      background: linear-gradient(160deg, #F9943A 0%, var(--orange) 35%, #E5580A 100%);
       color: var(--white);
-      padding: 44px 48px 44px 56px;
+      padding: 48px 48px 48px 56px;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      position: relative;
-      z-index: 1;
     }
 
     .logo img {
@@ -69,6 +78,8 @@
       border-radius: 6px;
       margin-bottom: 14px;
       letter-spacing: .03em;
+      width: fit-content;
+      max-width: fit-content;
     }
 
     .headline {
@@ -112,24 +123,24 @@
       position: absolute;
       bottom: 0;
       left: 50%;
-      transform: translateX(-62%);
-      height: 94%;
-      max-height: 880px;
+      transform: translateX(-58%);
+      height: 88%;
+      max-height: 780px;
       z-index: 5;
       pointer-events: none;
       object-fit: contain;
+      object-position: bottom center;
     }
 
     /* ── Right Side ── */
     .right {
+      position: relative;
+      z-index: 6;
       width: 50%;
-      background: var(--gray-50);
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 40px 48px 40px 60px;
-      position: relative;
-      z-index: 6;
     }
 
     /* ══════════════════════════════════════════
@@ -264,6 +275,13 @@
        ══════════════════════════════════════════ */
     @media (max-width: 960px) {
       .page { flex-direction: column; min-height: auto; }
+      .page::before {
+        /* On mobile, cover top orange section only */
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 320px;
+        bottom: auto;
+      }
       .model-desktop { display: none; }
 
       .left {
@@ -299,6 +317,7 @@
       .right {
         width: 100%;
         padding: 20px 16px 36px;
+        background: var(--gray-50);
       }
       .card {
         max-width: 100%;
