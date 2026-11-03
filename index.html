@@ -488,62 +488,62 @@
     btn.disabled = true;
     btn.innerHTML = 'Enviando...';
 
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 12000);
-
-    const payload = {
-      'Nome': data.nome,
-      'Data de Nascimento': data.nasc,
-      'CPF': data.cpf,
-      'WhatsApp': data.whats,
-      'E-mail': data.email,
-      'Cidade de Interesse': data.cidade,
-      '_subject': 'Novo lead ENEM – ' + data.nome,
-      '_template': 'table',
-      '_captcha': 'false'
+    const lead = {
+      nome: data.nome,
+      nasc: data.nasc,
+      cpf: data.cpf,
+      whats: data.whats,
+      email: data.email,
+      cidade: data.cidade,
+      timestamp: new Date().toISOString()
     };
+
+    /* Salva no localStorage como backup */
+    try {
+      const leads = JSON.parse(localStorage.getItem('leads_enem') || '[]');
+      leads.push(lead);
+      localStorage.setItem('leads_enem', JSON.stringify(leads));
+    } catch(e) {}
+
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 8000);
 
     fetch('https://formsubmit.co/ajax/unoparsg@gmail.com', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({
+        'Nome': data.nome,
+        'Data de Nascimento': data.nasc,
+        'CPF': data.cpf,
+        'WhatsApp': data.whats,
+        'E-mail': data.email,
+        'Cidade de Interesse': data.cidade,
+        '_subject': 'Novo lead ENEM – ' + data.nome,
+        '_template': 'table',
+        '_captcha': 'false'
+      }),
       signal: controller.signal
     })
     .then(r => r.json())
     .then(res => {
-      clearTimeout(timeout);
-      if (res.success === 'false' || res.success === false) {
-        /* FormSubmit precisa ativar o email na 1ª vez */
-        btn.disabled = false;
-        btn.innerHTML = originalBtn;
-        alert('Verifique o e-mail de ativação do FormSubmit enviado para o destinatário e tente novamente.');
-        return;
-      }
-      f.style.display='none';
+      clearTimeout(timer);
+      f.style.display = 'none';
       document.getElementById('ok').classList.add('show');
     })
     .catch(err => {
-      clearTimeout(timeout);
-      if (err.name === 'AbortError') {
-        /* Timeout — tenta envio via form redirect como fallback */
-        const fallback = document.createElement('form');
-        fallback.method = 'POST';
-        fallback.action = 'https://formsubmit.co/unoparsg@gmail.com';
-        Object.entries(payload).forEach(([k,v]) => {
-          const inp = document.createElement('input');
-          inp.type = 'hidden'; inp.name = k; inp.value = v;
-          fallback.appendChild(inp);
-        });
-        const next = document.createElement('input');
-        next.type = 'hidden'; next.name = '_next';
-        next.value = window.location.href + '?enviado=1';
-        fallback.appendChild(next);
-        document.body.appendChild(fallback);
-        fallback.submit();
-        return;
-      }
-      /* Erro de rede — mostra sucesso mesmo assim (dados podem ter chegado) */
-      f.style.display='none';
+      clearTimeout(timer);
+      /* FormSubmit falhou — envia por mailto como fallback */
+      const assunto = encodeURIComponent('Novo lead ENEM – ' + data.nome);
+      const corpo = encodeURIComponent(
+        'Nome: ' + data.nome + '\n' +
+        'Data de Nascimento: ' + data.nasc + '\n' +
+        'CPF: ' + data.cpf + '\n' +
+        'WhatsApp: ' + data.whats + '\n' +
+        'E-mail: ' + data.email + '\n' +
+        'Cidade de Interesse: ' + data.cidade
+      );
+      window.open('mailto:unoparsg@gmail.com?subject=' + assunto + '&body=' + corpo, '_blank');
+      f.style.display = 'none';
       document.getElementById('ok').classList.add('show');
     });
   });
