@@ -156,18 +156,20 @@
     }
 
     .card h2 {
-      font-size: 26px;
-      font-weight: 700;
-      line-height: 1.2;
-      margin-bottom: 4px;
+      font-size: 28px;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 8px;
+      color: var(--gray-900);
+      letter-spacing: -.02em;
     }
-    .card h2 span { color: var(--orange); }
+    .card h2 span { color: var(--orange); font-weight: 800; }
 
     .card .sub {
-      font-size: 14px;
+      font-size: 15px;
       color: var(--gray-500);
-      margin-bottom: 22px;
-      line-height: 1.4;
+      margin-bottom: 24px;
+      line-height: 1.5;
     }
 
     .field {
@@ -447,6 +449,13 @@
 
   document.getElementById('cidade').addEventListener('change', function(){ this.classList.toggle('filled', this.value!==''); });
 
+  /* Fallback redirect check */
+  if (window.location.search.includes('enviado=1')) {
+    document.getElementById('f').style.display = 'none';
+    document.getElementById('ok').classList.add('show');
+    history.replaceState(null, '', window.location.pathname);
+  }
+
   /* Submit */
   document.getElementById('f').addEventListener('submit', e => {
     e.preventDefault();
@@ -475,25 +484,68 @@
     checks.forEach(c => data[c.id] = document.getElementById(c.id).value);
 
     const btn = f.querySelector('.cta');
+    const originalBtn = btn.innerHTML;
     btn.disabled = true;
     btn.innerHTML = 'Enviando...';
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 12000);
+
+    const payload = {
+      'Nome': data.nome,
+      'Data de Nascimento': data.nasc,
+      'CPF': data.cpf,
+      'WhatsApp': data.whats,
+      'E-mail': data.email,
+      'Cidade de Interesse': data.cidade,
+      '_subject': 'Novo lead ENEM – ' + data.nome,
+      '_template': 'table',
+      '_captcha': 'false'
+    };
 
     fetch('https://formsubmit.co/ajax/unoparsg@gmail.com', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({
-        'Nome': data.nome,
-        'Data de Nascimento': data.nasc,
-        'CPF': data.cpf,
-        'WhatsApp': data.whats,
-        'E-mail': data.email,
-        'Cidade de Interesse': data.cidade,
-        '_subject': 'Novo lead ENEM – ' + data.nome,
-        '_template': 'table'
-      })
+      body: JSON.stringify(payload),
+      signal: controller.signal
     })
-    .then(() => { f.style.display='none'; document.getElementById('ok').classList.add('show'); })
-    .catch(() => { f.style.display='none'; document.getElementById('ok').classList.add('show'); });
+    .then(r => r.json())
+    .then(res => {
+      clearTimeout(timeout);
+      if (res.success === 'false' || res.success === false) {
+        /* FormSubmit precisa ativar o email na 1ª vez */
+        btn.disabled = false;
+        btn.innerHTML = originalBtn;
+        alert('Verifique o e-mail de ativação do FormSubmit enviado para o destinatário e tente novamente.');
+        return;
+      }
+      f.style.display='none';
+      document.getElementById('ok').classList.add('show');
+    })
+    .catch(err => {
+      clearTimeout(timeout);
+      if (err.name === 'AbortError') {
+        /* Timeout — tenta envio via form redirect como fallback */
+        const fallback = document.createElement('form');
+        fallback.method = 'POST';
+        fallback.action = 'https://formsubmit.co/unoparsg@gmail.com';
+        Object.entries(payload).forEach(([k,v]) => {
+          const inp = document.createElement('input');
+          inp.type = 'hidden'; inp.name = k; inp.value = v;
+          fallback.appendChild(inp);
+        });
+        const next = document.createElement('input');
+        next.type = 'hidden'; next.name = '_next';
+        next.value = window.location.href + '?enviado=1';
+        fallback.appendChild(next);
+        document.body.appendChild(fallback);
+        fallback.submit();
+        return;
+      }
+      /* Erro de rede — mostra sucesso mesmo assim (dados podem ter chegado) */
+      f.style.display='none';
+      document.getElementById('ok').classList.add('show');
+    });
   });
 </script>
 
