@@ -423,7 +423,6 @@
             <option value="Alegrete">Alegrete</option>
             <option value="Caçapava">Caçapava</option>
             <option value="São Gabriel">São Gabriel</option>
-            <option value="Outras cidades">Outras cidades</option>
           </select>
           <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
           <span class="err-msg">Selecione uma cidade</span>
@@ -528,20 +527,9 @@
       localStorage.setItem('leads_enem', JSON.stringify(leads));
     } catch(e) {}
 
-    /* ── Google Sheets (principal) + Web3Forms (email) ── */
-    const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxZXZBEBbdl5IT1U5RgySVZhOpSEIRth23VJzpPxrlgh7moO3tdAsxWIU4DFVEEN_6X/exec';
+    /* ── Web3Forms ── */
     const WEB3FORMS_KEY = '49b13634-fc3e-4a66-a33a-89cc90de4077';
-
-    const sheetsPayload = {
-      nome: data.nome,
-      nasc: data.nasc,
-      cpf: data.cpf,
-      whats: data.whats,
-      email: data.email,
-      cidade: data.cidade
-    };
-
-    const emailPayload = {
+    const payload = {
       access_key: WEB3FORMS_KEY,
       subject: 'Novo lead ENEM – ' + data.nome,
       from_name: 'Landing ENEM Anhanguera',
@@ -553,26 +541,20 @@
       'Cidade de Interesse': data.cidade
     };
 
-    /* Envia para os dois ao mesmo tempo */
-    Promise.all([
-      fetch(GOOGLE_SHEETS_URL, {
-        method: 'POST',
-        body: JSON.stringify(sheetsPayload)
-      }).then(r => r.json()),
-      fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify(emailPayload)
-      }).then(r => r.json())
-    ])
-    .then(([sheetsRes, emailRes]) => {
-      if (sheetsRes.success || emailRes.success) {
+    fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(r => r.json())
+    .then(res => {
+      if (res.success) {
         f.style.display = 'none';
         document.getElementById('ok').classList.add('show');
       } else {
         btn.disabled = false;
         btn.innerHTML = originalBtn;
-        alert('Erro ao enviar. Tente novamente.');
+        alert('Erro: ' + (res.message || 'Falha ao enviar'));
       }
     })
     .catch(err => {
