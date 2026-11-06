@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anhanguera – Bolsa ENEM até 100%</title>
+  <meta name="description" content="Use sua nota do ENEM e conquiste uma bolsa de até 100% na Anhanguera." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --orange: #F37021;
+      --orange-dark: #D95B10;
+      --white: #FFFFFF;
+      --gray-50: #F8F8F8;
+      --gray-200: #E5E7EB;
+      --gray-400: #9CA3AF;
+      --gray-500: #6B7280;
+      --gray-900: #1A1A1A;
+    }
+
+    html {
+      overflow-x: hidden;
+    }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--white);
+      color: var(--gray-900);
+      overflow-x: hidden;
+      max-width: 100vw;
+    }
+
+    /* ══════════════════════════════════════════
+       FULL-PAGE BACKGROUND
+       ══════════════════════════════════════════ */
+    .page {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      overflow: hidden;
+    }
+
+    .page::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url('img/background.png') center/cover no-repeat;
+      transform: scaleX(-1);
+      z-index: 0;
+    }
+
+    /* ── Left Content ── */
+    .left {
+      position: relative;
+      z-index: 2;
+      width: 50%;
+      color: var(--white);
+      padding: 48px 48px 48px 56px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .logo img {
+      height: 42px;
+      width: auto;
+      filter: brightness(0) invert(1);
+    }
+
+    .logo { margin-bottom: 32px; }
+
+    .enem-badge {
+      display: inline-block;
+      background: var(--white);
+      color: var(--orange);
+      font-weight: 800;
+      font-size: 14px;
+      padding: 5px 18px;
+      border-radius: 6px;
+      margin-bottom: 14px;
+      letter-spacing: .03em;
+      width: fit-content;
+      max-width: fit-content;
+    }
+
+    .headline {
+      font-size: 26px;
+      font-weight: 500;
+      line-height: 1.25;
+      margin-bottom: 2px;
+      max-width: 380px;
+    }
+    .headline strong { font-weight: 800; }
+
+    .percent {
+      font-size: 130px;
+      font-weight: 900;
+      line-height: .9;
+      margin-bottom: 32px;
+      letter-spacing: -.05em;
+    }
+    .percent sup { font-size: 32px; vertical-align: super; }
+
+    .benefits { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .benefits li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 14px;
+      line-height: 1.4;
+      max-width: 300px;
+    }
+    .b-icon {
+      flex-shrink: 0;
+      width: 36px; height: 36px;
+      background: rgba(255,255,255,.18);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .b-icon svg { width: 18px; height: 18px; }
+
+    /* ── Model Photo (desktop) ── */
+    .model-desktop {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-58%);
+      height: 88%;
+      max-height: 780px;
+      z-index: 5;
+      pointer-events: none;
+      object-fit: contain;
+      object-position: bottom center;
+    }
+
+    /* ── Right Side ── */
+    .right {
+      position: relative;
+      z-index: 6;
+      width: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 48px 40px 60px;
+    }
+
+    /* ══════════════════════════════════════════
+       FORM CARD
+       ══════════════════════════════════════════ */
+    .card {
+      background: var(--white);
+      border-radius: 18px;
+      box-shadow: 0 8px 40px rgba(0,0,0,.07);
+      padding: 36px 32px 28px;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .card h2 {
+      font-size: 34px;
+      font-weight: 900;
+      line-height: 1.12;
+      margin-bottom: 8px;
+      color: var(--gray-900);
+      letter-spacing: -.03em;
+    }
+    .card h2 span { color: var(--orange); font-weight: 900; }
+
+    .card .sub {
+      font-size: 15px;
+      color: var(--gray-500);
+      margin-bottom: 24px;
+      line-height: 1.5;
+      font-weight: 400;
+    }
+
+    .field {
+      position: relative;
+      margin-bottom: 10px;
+    }
+    .field .ic {
+      position: absolute;
+      left: 14px; top: 50%; transform: translateY(-50%);
+      width: 18px; height: 18px;
+      color: var(--gray-400);
+      pointer-events: none;
+    }
+    .field input,
+    .field select {
+      width: 100%;
+      height: 48px;
+      padding: 0 14px 0 44px;
+      border: 1.5px solid var(--gray-200);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--gray-900);
+      background: var(--white);
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .field input::placeholder { color: var(--gray-400); }
+    .field input:focus,
+    .field select:focus {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 3px rgba(243,112,33,.1);
+    }
+    .field select { cursor: pointer; color: var(--gray-400); }
+    .field select.filled { color: var(--gray-900); }
+    .mask-hint {
+      position: absolute;
+      right: 14px; top: 50%; transform: translateY(-50%);
+      font-size: 14px;
+      color: var(--gray-400);
+      pointer-events: none;
+      font-family: inherit;
+      letter-spacing: .5px;
+    }
+    .field .arrow {
+      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+      width: 16px; height: 16px; color: var(--gray-400); pointer-events: none;
+    }
+
+    .field input.err,
+    .field select.err {
+      border-color: #EF4444;
+      box-shadow: 0 0 0 3px rgba(239,68,68,.08);
+    }
+    .err-msg { font-size: 11px; color: #EF4444; margin-top: 2px; display: none; }
+    .field.bad .err-msg { display: block; }
+
+    .cta {
+      width: 100%;
+      height: 52px;
+      margin-top: 6px;
+      background: var(--orange);
+      color: var(--white);
+      border: none;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background .15s, transform .1s;
+    }
+    .cta:hover { background: var(--orange-dark); }
+    .cta:active { transform: scale(.98); }
+    .cta svg { width: 20px; height: 20px; }
+
+    .lock-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-top: 14px;
+      font-size: 11px;
+      color: var(--gray-500);
+      line-height: 1.4;
+    }
+    .lock-row svg { flex-shrink: 0; width: 13px; height: 13px; margin-top: 1px; color: var(--gray-400); }
+
+    .disc {
+      text-align: left;
+      font-size: 10px;
+      color: var(--gray-400);
+      margin-top: 18px;
+      line-height: 1.4;
+    }
+
+    /* Success */
+    .ok-msg { display: none; text-align: center; padding: 20px 0; }
+    .ok-msg.show { display: block; }
+    .ok-msg .circle {
+      width: 60px; height: 60px; background: #ECFDF5; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; margin: 0 auto 14px;
+    }
+    .ok-msg .circle svg { width: 28px; height: 28px; color: #10B981; }
+    .ok-msg h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .ok-msg p { font-size: 13px; color: var(--gray-500); line-height: 1.5; }
+
+    /* ══════════════════════════════════════════
+       MOBILE
+       ══════════════════════════════════════════ */
+    @media (max-width: 960px) {
+      .page {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+        overflow: visible;
+      }
+
+      .page::before {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 420px;
+        bottom: auto;
+        inset: auto;
+        transform: scaleX(-1);
+        clip-path: inset(0);
+      }
+
+      .left {
+        width: 100%;
+        padding: 28px 16px 24px;
+        position: relative;
+        z-index: 2;
+      }
+
+      .model-desktop { display: none; }
+
+      .mobile-hero {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .mobile-hero .text-col { flex: 1; min-width: 0; }
+
+      .mobile-hero .model-mobile {
+        display: block;
+        width: 200px;
+        height: auto;
+        flex-shrink: 0;
+        object-fit: contain;
+        margin-top: -20px;
+        margin-right: -16px;
+        margin-bottom: -24px;
+      }
+
+      .logo { margin-bottom: 16px; }
+      .logo img { height: 32px; }
+      .enem-badge { font-size: 12px; padding: 4px 14px; margin-bottom: 8px; }
+      .headline { font-size: 17px; max-width: 100%; margin-bottom: 2px; }
+      .percent { font-size: 52px; margin-bottom: 0; }
+      .percent sup { font-size: 18px; }
+      .benefits { display: none; }
+
+      .right {
+        position: relative;
+        z-index: 6;
+        width: 100%;
+        padding: 20px 16px 36px;
+        background: var(--gray-50);
+      }
+      .card {
+        max-width: 100%;
+        padding: 24px 18px 20px;
+        border-radius: 14px;
+      }
+      .card h2 { font-size: 26px; }
+
+      .mask-hint {
+        font-size: 12px;
+        right: 10px;
+      }
+    }
+
+    @media (min-width: 961px) {
+      .mobile-hero { display: contents; }
+      .mobile-hero .text-col { display: contents; }
+      .model-mobile { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+  <!-- Left Orange -->
+  <div class="left">
+    <div class="logo"><img src="img/logo.png" alt="Anhanguera" /></div>
+
+    <div class="mobile-hero">
+      <div class="text-col">
+        <div class="enem-badge">ENEM</div>
+        <h1 class="headline">Use sua nota do<br>ENEM e conquiste<br>uma <strong>bolsa de até</strong></h1>
+        <div class="percent">100%<sup>*</sup></div>
+      </div>
+      <img src="img/modelo.png" alt="" class="model-mobile" />
+    </div>
+
+    <ul class="benefits">
+      <li>
+        <span class="b-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>
+        Graduação com qualidade Anhanguera
+      </li>
+      <li>
+        <span class="b-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 8h2m2 0h2"/><path d="M7 11h6"/></svg></span>
+        Diversos cursos presenciais, semipresenciais e EAD
+      </li>
+      <li>
+        <span class="b-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><rect x="7" y="14" width="3" height="3" rx=".5"/></svg></span>
+        Condições especiais para você começar sua faculdade
+      </li>
+    </ul>
+  </div>
+
+  <!-- Model Desktop -->
+  <img src="img/modelo.png" alt="" class="model-desktop" />
+
+  <!-- Right -->
+  <div class="right">
+    <div class="card">
+      <h2>Garanta sua bolsa<br>com a nota do <span>ENEM</span></h2>
+      <p class="sub">Preencha o formulário e fale com um de nossos consultores.</p>
+
+      <form id="f" novalidate>
+        <div class="field">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <input type="text" id="nome" placeholder="Nome completo*" required autocomplete="name" />
+          <span class="err-msg">Informe seu nome completo</span>
+        </div>
+        <div class="field">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <input type="text" id="nasc" placeholder="Data de Nascimento*" required inputmode="numeric" maxlength="10" />
+          <span class="mask-hint" data-for="nasc">__/__/____</span>
+          <span class="err-msg">Informe uma data válida</span>
+        </div>
+        <div class="field">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          <input type="text" id="cpf" placeholder="CPF*" required inputmode="numeric" maxlength="14" />
+          <span class="mask-hint" data-for="cpf">___.___.___-__</span>
+          <span class="err-msg">Informe um CPF válido</span>
+        </div>
+        <div class="field">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          <input type="text" id="whats" placeholder="WhatsApp*" required inputmode="numeric" maxlength="15" />
+          <span class="mask-hint" data-for="whats">( ) _____-____</span>
+          <span class="err-msg">Informe um WhatsApp válido</span>
+        </div>
+        <div class="field">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <input type="email" id="email" placeholder="E-mail*" required autocomplete="email" />
+          <span class="err-msg">Informe um e-mail válido</span>
+        </div>
+        <div class="field">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <select id="cidade" required>
+            <option value="" disabled selected>Cidade de interesse*</option>
+            <option value="Alegrete">Alegrete</option>
+            <option value="Caçapava">Caçapava</option>
+            <option value="São Gabriel">São Gabriel</option>
+            <option value="Outras cidades">Outras cidades</option>
+          </select>
+          <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          <span class="err-msg">Selecione uma cidade</span>
+        </div>
+
+        <button type="submit" class="cta">
+          Quero consultar minha bolsa
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+
+        <div class="lock-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          <span>Seus dados estão protegidos e serão usados apenas para cuidar da sua matrícula.</span>
+        </div>
+      </form>
+
+      <div class="ok-msg" id="ok">
+        <div class="circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <h3>Cadastro realizado!</h3>
+        <p>Um de nossos consultores entrará em contato pelo WhatsApp em breve.</p>
+      </div>
+
+      <p class="disc">*Sujeito à nota do ENEM, critérios de elegibilidade, cursos, unidades e condições da campanha.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* Masks */
+  const m = (id, fn) => {
+    const el = document.getElementById(id);
+    el.addEventListener('input', () => { const p=el.selectionStart,v=el.value; el.value=fn(el.value); el.setSelectionRange(p+(el.value.length-v.length),p+(el.value.length-v.length)); });
+  };
+  m('nasc', v => { v=v.replace(/\D/g,'').slice(0,8); return v.length>4?v.slice(0,2)+'/'+v.slice(2,4)+'/'+v.slice(4):v.length>2?v.slice(0,2)+'/'+v.slice(2):v; });
+  m('cpf', v => { v=v.replace(/\D/g,'').slice(0,11); return v.length>9?v.slice(0,3)+'.'+v.slice(3,6)+'.'+v.slice(6,9)+'-'+v.slice(9):v.length>6?v.slice(0,3)+'.'+v.slice(3,6)+'.'+v.slice(6):v.length>3?v.slice(0,3)+'.'+v.slice(3):v; });
+  m('whats', v => { v=v.replace(/\D/g,'').slice(0,11); return v.length>6?'('+v.slice(0,2)+') '+v.slice(2,7)+'-'+v.slice(7):v.length>2?'('+v.slice(0,2)+') '+v.slice(2):v.length>0?'('+v:v; });
+
+  document.getElementById('cidade').addEventListener('change', function(){ this.classList.toggle('filled', this.value!==''); });
+
+  /* Hide mask hints when input has value */
+  document.querySelectorAll('.mask-hint').forEach(h => {
+    const inp = document.getElementById(h.dataset.for);
+    const toggle = () => { h.style.display = inp.value.length > 0 ? 'none' : ''; };
+    inp.addEventListener('input', toggle);
+    inp.addEventListener('focus', toggle);
+    inp.addEventListener('blur', toggle);
+  });
+
+  /* Fallback redirect check */
+  if (window.location.search.includes('enviado=1')) {
+    document.getElementById('f').style.display = 'none';
+    document.getElementById('ok').classList.add('show');
+    history.replaceState(null, '', window.location.pathname);
+  }
+
+  /* Submit */
+  document.getElementById('f').addEventListener('submit', e => {
+    e.preventDefault();
+    const f = e.target;
+    let ok = true;
+    f.querySelectorAll('.field').forEach(g => g.classList.remove('bad'));
+    f.querySelectorAll('input,select').forEach(el => el.classList.remove('err'));
+
+    const checks = [
+      { id:'nome',  test: v=>v.trim().length>=3 },
+      { id:'nasc',  test: v=>{ const p=v.split('/'); return p.length===3&&+p[0]>=1&&+p[0]<=31&&+p[1]>=1&&+p[1]<=12&&+p[2]>=1940&&+p[2]<=2010; }},
+      { id:'cpf',   test: v=>v.replace(/\D/g,'').length===11 },
+      { id:'whats', test: v=>{ const n=v.replace(/\D/g,''); return n.length>=10&&n.length<=11; }},
+      { id:'email', test: v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) },
+      { id:'cidade',test: v=>v!=='' },
+    ];
+
+    checks.forEach(c => {
+      const el = document.getElementById(c.id);
+      if (!c.test(el.value)) { el.closest('.field').classList.add('bad'); el.classList.add('err'); ok=false; }
+    });
+
+    if (!ok) return;
+
+    const data = {};
+    checks.forEach(c => data[c.id] = document.getElementById(c.id).value);
+
+    const btn = f.querySelector('.cta');
+    const originalBtn = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = 'Enviando...';
+
+    const lead = {
+      nome: data.nome,
+      nasc: data.nasc,
+      cpf: data.cpf,
+      whats: data.whats,
+      email: data.email,
+      cidade: data.cidade,
+      timestamp: new Date().toISOString()
+    };
+
+    /* Salva no localStorage como backup */
+    try {
+      const leads = JSON.parse(localStorage.getItem('leads_enem') || '[]');
+      leads.push(lead);
+      localStorage.setItem('leads_enem', JSON.stringify(leads));
+    } catch(e) {}
+
+    /* ── Google Sheets (principal) + Web3Forms (email) ── */
+    const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxZXZBEBbdl5IT1U5RgySVZhOpSEIRth23VJzpPxrlgh7moO3tdAsxWIU4DFVEEN_6X/exec';
+    const WEB3FORMS_KEY = '49b13634-fc3e-4a66-a33a-89cc90de4077';
+
+    const sheetsPayload = {
+      nome: data.nome,
+      nasc: data.nasc,
+      cpf: data.cpf,
+      whats: data.whats,
+      email: data.email,
+      cidade: data.cidade
+    };
+
+    const emailPayload = {
+      access_key: WEB3FORMS_KEY,
+      subject: 'Novo lead ENEM – ' + data.nome,
+      from_name: 'Landing ENEM Anhanguera',
+      Nome: data.nome,
+      'Data de Nascimento': data.nasc,
+      CPF: data.cpf,
+      WhatsApp: data.whats,
+      'E-mail': data.email,
+      'Cidade de Interesse': data.cidade
+    };
+
+    /* Envia para os dois ao mesmo tempo */
+    Promise.all([
+      fetch(GOOGLE_SHEETS_URL, {
+        method: 'POST',
+        body: JSON.stringify(sheetsPayload)
+      }).then(r => r.json()),
+      fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(emailPayload)
+      }).then(r => r.json())
+    ])
+    .then(([sheetsRes, emailRes]) => {
+      if (sheetsRes.success || emailRes.success) {
+        f.style.display = 'none';
+        document.getElementById('ok').classList.add('show');
+      } else {
+        btn.disabled = false;
+        btn.innerHTML = originalBtn;
+        alert('Erro ao enviar. Tente novamente.');
+      }
+    })
+    .catch(err => {
+      btn.disabled = false;
+      btn.innerHTML = originalBtn;
+      alert('Erro de conexão: ' + err.message);
+    });
+  });
+</script>
+
+</body>
+</html>
